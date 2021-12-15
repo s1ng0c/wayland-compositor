@@ -49,6 +49,7 @@ struct surface {
 	struct client *client;
 	struct wl_list link;
 };
+
 static struct wl_list surfaces;
 static struct surface *cursor = NULL;
 static struct surface *moving_surface = NULL;
@@ -61,6 +62,7 @@ static void deactivate_surface (struct surface *surface) {
 	wl_array_init (&state_array);
 	xdg_toplevel_send_configure (surface->xdg_toplevel, 0, 0, &state_array);
 }
+
 static void activate_surface (struct surface *surface) {
 	wl_list_remove (&surface->link);
 	wl_list_insert (&surfaces, &surface->link);
@@ -74,6 +76,7 @@ static void activate_surface (struct surface *surface) {
 	states[0] = XDG_TOPLEVEL_STATE_ACTIVATED;
 	xdg_toplevel_send_configure (surface->xdg_toplevel, 0, 0, &array);
 }
+
 static void delete_surface (struct wl_resource *resource) {
 	struct surface *surface = wl_resource_get_user_data (resource);
 	wl_list_remove (&surface->link);
@@ -87,10 +90,12 @@ static void delete_surface (struct wl_resource *resource) {
 static void surface_destroy (struct wl_client *client, struct wl_resource *resource) {
 	
 }
+
 static void surface_attach (struct wl_client *client, struct wl_resource *resource, struct wl_resource *buffer, int32_t x, int32_t y) {
 	struct surface *surface = wl_resource_get_user_data (resource);
 	surface->buffer = buffer;
 }
+
 static void surface_damage (struct wl_client *client, struct wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height) {
 	
 }
@@ -98,12 +103,15 @@ static void surface_frame (struct wl_client *client, struct wl_resource *resourc
 	struct surface *surface = wl_resource_get_user_data (resource);
 	surface->frame_callback = wl_resource_create (client, &wl_callback_interface, 1, callback);
 }
+
 static void surface_set_opaque_region (struct wl_client *client, struct wl_resource *resource, struct wl_resource *region) {
 	
 }
+
 static void surface_set_input_region (struct wl_client *client, struct wl_resource *resource, struct wl_resource *region) {
 	
 }
+
 static void surface_commit (struct wl_client *client, struct wl_resource *resource) {
 	struct surface *surface = wl_resource_get_user_data (resource);
 	if (!surface->buffer) {
@@ -444,6 +452,7 @@ static void draw (void) {
 	
 	glFlush ();
 	backend_swap_buffers ();
+	printf("-- draw now\n");
 }
 
 static void main_loop (void) {

@@ -2,6 +2,7 @@
 #include "backend.h"
 #include <wayland-server.h>
 #include <X11/Xlib.h>
+#include <X11/Xutil.h>
 #include <linux/input.h>
 #include <EGL/egl.h>
 #include <X11/Xlib-xcb.h>
@@ -132,6 +133,7 @@ void backend_dispatch_nonblocking (void) {
 				callbacks.mouse_button (BTN_MIDDLE, WL_POINTER_BUTTON_STATE_PRESSED);
 			else if (event.xbutton.button == Button3)
 				callbacks.mouse_button (BTN_RIGHT, WL_POINTER_BUTTON_STATE_PRESSED);
+			printf("-- button press\n");
 		}
 		else if (event.type == ButtonRelease) {
 			if (event.xbutton.button == Button1)
@@ -140,16 +142,19 @@ void backend_dispatch_nonblocking (void) {
 				callbacks.mouse_button (BTN_MIDDLE, WL_POINTER_BUTTON_STATE_RELEASED);
 			else if (event.xbutton.button == Button3)
 				callbacks.mouse_button (BTN_RIGHT, WL_POINTER_BUTTON_STATE_RELEASED);
+			printf("-- button release\n");
 		}
 		else if (event.type == KeyPress) {
 			callbacks.key (event.xkey.keycode - 8, WL_KEYBOARD_KEY_STATE_PRESSED);
 			xkb_state_update_key (state, event.xkey.keycode, XKB_KEY_DOWN);
 			update_modifiers ();
+			printf("-- key press\n");
 		}
 		else if (event.type == KeyRelease) {
 			callbacks.key (event.xkey.keycode - 8, WL_KEYBOARD_KEY_STATE_RELEASED);
 			xkb_state_update_key (state, event.xkey.keycode, XKB_KEY_UP);
 			update_modifiers ();
+			printf("-- key release\n");
 		}
 		else if (event.type == FocusIn) {
 			xkb_state_unref (state);
